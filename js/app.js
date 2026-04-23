@@ -114,70 +114,69 @@ function selectSearchResult(el) {
   const id = el.dataset.id;
   const idType = el.dataset.idType;
   showPartnerView(name, idType, id);
+  updateGlobalChip(name);
+  document.querySelectorAll('.search-dropdown').forEach(d => d.classList.add('hidden'));
+}
 
-  // Update global search chip
+// ── Update global search chip state ──
+function updateGlobalChip(name) {
   const chip = document.getElementById('globalLoadedChip');
   const chipName = document.getElementById('globalChipName');
   const globalInput = document.getElementById('globalSearchInput');
+  const kbd = document.querySelector('.global-kbd');
   chipName.textContent = name;
   chip.classList.remove('hidden');
   globalInput.value = '';
   globalInput.style.display = 'none';
-
-  // Close all dropdowns
-  document.querySelectorAll('.search-dropdown').forEach(d => d.classList.add('hidden'));
+  if (kbd) kbd.style.display = 'none';
 }
 
-// ── Init search on both inputs ──
+// ── Init search on global input only ──
 function initSearch() {
-  const heroInput = document.getElementById('heroSearchInput');
-  const heroDropdown = document.getElementById('heroSearchDropdown');
   const globalInput = document.getElementById('globalSearchInput');
   const globalDropdown = document.getElementById('globalSearchDropdown');
 
-  function wireSearch(input, dropdown) {
-    let activeIdx = -1;
+  let activeIdx = -1;
 
-    input.addEventListener('input', () => {
-      const q = input.value.trim();
-      activeIdx = -1;
-      if (q.length < 2) { dropdown.classList.add('hidden'); return; }
-      renderDropdown(dropdown, searchEntities(q), q);
-    });
+  globalInput.addEventListener('input', () => {
+    const q = globalInput.value.trim();
+    activeIdx = -1;
+    // Hide kbd hint when typing
+    const kbd = document.querySelector('.global-kbd');
+    if (kbd) kbd.style.display = q.length > 0 ? 'none' : '';
+    if (q.length < 2) { globalDropdown.classList.add('hidden'); return; }
+    renderDropdown(globalDropdown, searchEntities(q), q);
+  });
 
-    input.addEventListener('keydown', (e) => {
-      const items = dropdown.querySelectorAll('.search-result');
-      if (!items.length) return;
+  globalInput.addEventListener('keydown', (e) => {
+    const items = globalDropdown.querySelectorAll('.search-result');
+    if (!items.length) return;
 
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        activeIdx = Math.min(activeIdx + 1, items.length - 1);
-        items.forEach((it, i) => it.classList.toggle('active', i === activeIdx));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        activeIdx = Math.max(activeIdx - 1, 0);
-        items.forEach((it, i) => it.classList.toggle('active', i === activeIdx));
-      } else if (e.key === 'Enter' && activeIdx >= 0) {
-        e.preventDefault();
-        selectSearchResult(items[activeIdx]);
-      } else if (e.key === 'Escape') {
-        dropdown.classList.add('hidden');
-        input.blur();
-      }
-    });
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, items.length - 1);
+      items.forEach((it, i) => it.classList.toggle('active', i === activeIdx));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, 0);
+      items.forEach((it, i) => it.classList.toggle('active', i === activeIdx));
+    } else if (e.key === 'Enter' && activeIdx >= 0) {
+      e.preventDefault();
+      selectSearchResult(items[activeIdx]);
+    } else if (e.key === 'Escape') {
+      globalDropdown.classList.add('hidden');
+      globalInput.blur();
+    }
+  });
 
-    input.addEventListener('blur', () => {
-      setTimeout(() => dropdown.classList.add('hidden'), 200);
-    });
+  globalInput.addEventListener('blur', () => {
+    setTimeout(() => globalDropdown.classList.add('hidden'), 200);
+  });
 
-    input.addEventListener('focus', () => {
-      const q = input.value.trim();
-      if (q.length >= 2) renderDropdown(dropdown, searchEntities(q), q);
-    });
-  }
-
-  wireSearch(heroInput, heroDropdown);
-  wireSearch(globalInput, globalDropdown);
+  globalInput.addEventListener('focus', () => {
+    const q = globalInput.value.trim();
+    if (q.length >= 2) renderDropdown(globalDropdown, searchEntities(q), q);
+  });
 
   // Global chip clear
   document.getElementById('globalChipClear').addEventListener('click', () => {
@@ -189,26 +188,23 @@ function initSearch() {
 function clearLoadedPartner() {
   const chip = document.getElementById('globalLoadedChip');
   const globalInput = document.getElementById('globalSearchInput');
+  const kbd = document.querySelector('.global-kbd');
   chip.classList.add('hidden');
   globalInput.style.display = '';
   globalInput.value = '';
+  if (kbd) kbd.style.display = '';
   globalInput.focus();
   document.getElementById('partnerLoaded').classList.add('hidden');
   document.getElementById('freHomepage').classList.remove('hidden');
   setActiveNav('navHome');
 }
 
-// ── Keyboard shortcut: "/" focuses hero search ──
+// ── Keyboard shortcut: "/" focuses global search ──
 function initKeyboardShortcut() {
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
       e.preventDefault();
-      const hero = document.getElementById('heroSearchInput');
-      if (hero && !hero.closest('.hidden')) {
-        hero.focus();
-      } else {
-        document.getElementById('globalSearchInput').focus();
-      }
+      document.getElementById('globalSearchInput').focus();
     }
   });
 }
@@ -222,14 +218,7 @@ function initPartnerCards() {
       const type = card.dataset.type;
       const idType = type === 'partnerone' ? 'PartnerOne ID' : 'MPN ID';
       showPartnerView(name, idType, id);
-
-      // Also update global chip
-      const chip = document.getElementById('globalLoadedChip');
-      const chipName = document.getElementById('globalChipName');
-      const globalInput = document.getElementById('globalSearchInput');
-      chipName.textContent = name;
-      chip.classList.remove('hidden');
-      globalInput.style.display = 'none';
+      updateGlobalChip(name);
     };
     card.addEventListener('click', handler);
     const btn = card.querySelector('.partner-load-quick');
@@ -377,17 +366,12 @@ function renderOppView(opp) {
   ).join('');
 }
 
-/* ── Dismissible strips (Onboarding + What's New) ── */
+/* ── Dismissible strips (Onboarding) ── */
 function initDismissibles() {
   const onboardingStrip = document.getElementById('onboardingStrip');
-  const whatsNewStrip = document.getElementById('whatsNewStrip');
 
-  // Check localStorage for onboarding dismissal
   if (localStorage.getItem('aspxi_onboarding_dismissed') === 'true' && onboardingStrip) {
     onboardingStrip.classList.add('hidden');
-  }
-  if (localStorage.getItem('aspxi_whatsnew_dismissed') === 'true' && whatsNewStrip) {
-    whatsNewStrip.classList.add('hidden');
   }
 
   const onboardingDismiss = document.getElementById('dismissOnboarding');
@@ -395,14 +379,6 @@ function initDismissibles() {
     onboardingDismiss.addEventListener('click', () => {
       onboardingStrip.classList.add('hidden');
       localStorage.setItem('aspxi_onboarding_dismissed', 'true');
-    });
-  }
-
-  const whatsNewDismiss = document.getElementById('dismissWhatsNew');
-  if (whatsNewDismiss) {
-    whatsNewDismiss.addEventListener('click', () => {
-      whatsNewStrip.classList.add('hidden');
-      localStorage.setItem('aspxi_whatsnew_dismissed', 'true');
     });
   }
 }
@@ -433,13 +409,7 @@ function initAlertActions() {
       if (partner && id) {
         const idLabel = type === 'partnerone' ? 'PartnerOne ID' : 'MPN ID';
         showPartnerView(partner, idLabel, id);
-
-        const chip = document.getElementById('globalLoadedChip');
-        const chipName = document.getElementById('globalChipName');
-        const globalInput = document.getElementById('globalSearchInput');
-        chipName.textContent = partner;
-        chip.classList.remove('hidden');
-        globalInput.style.display = 'none';
+        updateGlobalChip(partner);
       }
     });
   });

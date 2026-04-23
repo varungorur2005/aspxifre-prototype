@@ -21,19 +21,22 @@
       <span class="nav-separator">|</span>
       <span class="nav-subtitle">Partner Experience – Internal</span>
     </div>
-    <div class="nav-right">
-      <!-- Global persistent search (Links-style) -->
+    <!-- Global partner search (center, persistent) -->
+    <div class="nav-center">
       <div class="global-search" id="globalSearch">
         <svg class="global-search-icon" width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
           <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l4.147 4.147a.75.75 0 0 1-1.06 1.06l-4.147-4.147A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
         </svg>
-        <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search partners, tenants, or IDs…" autocomplete="off" />
+        <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search by partner name, tenant, PartnerOne ID, MPN ID…" autocomplete="off" />
         <div class="global-loaded-chip hidden" id="globalLoadedChip">
           <span id="globalChipName"></span>
           <button class="global-chip-clear" id="globalChipClear" aria-label="Clear partner">✕</button>
         </div>
+        <kbd class="global-kbd">/</kbd>
         <div class="search-dropdown hidden" id="globalSearchDropdown"></div>
       </div>
+    </div>
+    <div class="nav-right">
       <button class="nav-help" title="Help & readiness">?</button>
       <div class="nav-avatar" title="Varun Gorur">VG</div>
     </div>
@@ -98,18 +101,10 @@
           <button class="onboarding-dismiss" id="dismissOnboarding" aria-label="Dismiss">✕</button>
         </div>
 
-        <!-- #6: What's New strip -->
-        <div class="whats-new-strip" id="whatsNewStrip">
-          <div class="whats-new-badge">NEW</div>
-          <span class="whats-new-text"><strong>Copilot Opportunities tab</strong> now includes free-to-paid whitespace and agent MAU data.</span>
-          <a href="https://aka.ms/ASPXDocs" target="_blank" class="whats-new-link">Learn more →</a>
-          <button class="whats-new-dismiss" id="dismissWhatsNew" aria-label="Dismiss">✕</button>
-        </div>
-
         <!-- Greeting -->
         <section class="greeting-section">
           <h1 class="greeting" id="greeting"></h1>
-          <p class="greeting-sub">See what your partner sees — aligned on the same tenant-level data.</p>
+          <p class="greeting-sub">Use the search bar above to find a partner by name, tenant, or ID.</p>
         </section>
 
         <!-- #1: Access Scope + #2: Data Freshness -->
@@ -129,23 +124,6 @@
             <span>Data refreshed: <strong id="dataRefreshDate">Apr 18, 2026</strong></span>
           </div>
         </div>
-
-        <!-- Hero Partner Picker — intelligent search -->
-        <section class="hero-picker">
-          <label class="hero-picker-label">Which partner are you working with?</label>
-          <div class="hero-search-box" id="heroSearchBox">
-            <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l4.147 4.147a.75.75 0 0 1-1.06 1.06l-4.147-4.147A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
-            </svg>
-            <input type="text" id="heroSearchInput" class="hero-search-input" placeholder="Search by partner name, tenant name, PartnerOne ID, MPN ID, or TPID…" autocomplete="off" />
-            <kbd class="hero-kbd">/</kbd>
-            <div class="search-dropdown hidden" id="heroSearchDropdown"></div>
-          </div>
-          <div class="hero-hint">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="#999"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 12.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zM8 6.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 6.5zM8 4.5A.75.75 0 1 1 8 6a.75.75 0 0 1 0-1.5z"/></svg>
-            <span>Type a name, ID, or TPID — we'll find the right partner for you.</span>
-          </div>
-        </section>
 
         <!-- #3: Proactive Partner Alerts -->
         <section class="alerts-section" id="alertsSection">
@@ -184,12 +162,69 @@
             </div>
           </div>
 
-          <!-- MPL (Managed Partner List) view — V1.5 placeholder -->
+          <!-- MPL (Managed Partner List) view — simulated assigned partners -->
           <div class="partner-view hidden" id="mplPartnersView">
-            <div class="placeholder-card">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-              <p><strong>Managed Partner List</strong> — Your officially assigned partners from MPL will appear here automatically.</p>
-              <span class="placeholder-badge">Coming in V1.5</span>
+            <p class="mpl-hint">These partners are automatically assigned to you via MPL.</p>
+            <div class="recent-partner-grid">
+              <div class="partner-card" data-partner="Contoso Partners" data-id="8834721" data-type="partnerone">
+                <div class="partner-card-top">
+                  <div class="partner-avatar">CP</div>
+                  <div class="partner-info">
+                    <h3>Contoso Partners</h3>
+                    <span class="partner-id">PartnerOne ID: 8834721</span>
+                  </div>
+                  <span class="mpl-badge">MPL</span>
+                </div>
+                <div class="partner-card-stats">
+                  <div class="stat"><span class="stat-value">47</span><span class="stat-label">Tenants</span></div>
+                  <div class="stat"><span class="stat-value">23%</span><span class="stat-label">Copilot Penetration</span></div>
+                  <div class="stat"><span class="stat-value">8</span><span class="stat-label">Upsell Ready</span></div>
+                </div>
+                <div class="partner-card-footer">
+                  <span class="partner-last-viewed">Assigned · US West</span>
+                  <button class="partner-load-quick">Load</button>
+                </div>
+              </div>
+
+              <div class="partner-card" data-partner="Fabrikam Inc." data-id="4419283" data-type="mpn">
+                <div class="partner-card-top">
+                  <div class="partner-avatar">FI</div>
+                  <div class="partner-info">
+                    <h3>Fabrikam Inc.</h3>
+                    <span class="partner-id">MPN ID: 4419283</span>
+                  </div>
+                  <span class="mpl-badge">MPL</span>
+                </div>
+                <div class="partner-card-stats">
+                  <div class="stat"><span class="stat-value">22</span><span class="stat-label">Tenants</span></div>
+                  <div class="stat"><span class="stat-value">41%</span><span class="stat-label">Copilot Penetration</span></div>
+                  <div class="stat"><span class="stat-value">3</span><span class="stat-label">Upsell Ready</span></div>
+                </div>
+                <div class="partner-card-footer">
+                  <span class="partner-last-viewed">Assigned · US Central</span>
+                  <button class="partner-load-quick">Load</button>
+                </div>
+              </div>
+
+              <div class="partner-card" data-partner="Adatum Corporation" data-id="7721054" data-type="mpn">
+                <div class="partner-card-top">
+                  <div class="partner-avatar">AC</div>
+                  <div class="partner-info">
+                    <h3>Adatum Corporation</h3>
+                    <span class="partner-id">MPN ID: 7721054</span>
+                  </div>
+                  <span class="mpl-badge">MPL</span>
+                </div>
+                <div class="partner-card-stats">
+                  <div class="stat"><span class="stat-value">15</span><span class="stat-label">Tenants</span></div>
+                  <div class="stat"><span class="stat-value">18%</span><span class="stat-label">Copilot Penetration</span></div>
+                  <div class="stat"><span class="stat-value">5</span><span class="stat-label">Upsell Ready</span></div>
+                </div>
+                <div class="partner-card-footer">
+                  <span class="partner-last-viewed">Assigned · US East</span>
+                  <button class="partner-load-quick">Load</button>
+                </div>
+              </div>
             </div>
           </div>
 
