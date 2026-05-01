@@ -2,12 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initGreeting();
   initDropdown();
   initPartnerLoad();
-  initPartnerCards();
   initOppTabs();
   initBannerChange();
   initDismissibles();
-  initPartnerViewToggle();
-  initPinButtons();
 });
 
 // ── Greeting ──
@@ -60,22 +57,6 @@ function loadPartner(idValue) {
   showPartnerView(name, label, idValue);
 }
 
-// ── Quick-load from partner cards ──
-function initPartnerCards() {
-  document.querySelectorAll('.partner-card').forEach(card => {
-    const handler = () => {
-      const name = card.dataset.partner;
-      const id = card.dataset.id;
-      const type = card.dataset.type;
-      const idType = type === 'partnerone' ? 'PartnerOne ID' : 'MPN ID';
-      showPartnerView(name, idType, id);
-    };
-    card.addEventListener('click', handler);
-    const btn = card.querySelector('.partner-load-quick');
-    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); handler(); });
-  });
-}
-
 // ── Show partner-loaded view ──
 function showPartnerView(name, idType, id) {
   document.getElementById('freHomepage').classList.add('hidden');
@@ -83,7 +64,6 @@ function showPartnerView(name, idType, id) {
   document.getElementById('bannerPartnerName').textContent = name;
   document.getElementById('bannerIdType').textContent = idType;
   document.getElementById('bannerId').textContent = id;
-  setActiveNav('navGrowth');
 
   renderOppView('copilot');
   setActiveOppTab('copilot');
@@ -94,15 +74,7 @@ function initBannerChange() {
   document.getElementById('bannerChange').addEventListener('click', () => {
     document.getElementById('partnerLoaded').classList.add('hidden');
     document.getElementById('freHomepage').classList.remove('hidden');
-    setActiveNav('navHome');
   });
-}
-
-// ── Sidebar nav highlight ──
-function setActiveNav(activeId) {
-  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-  const el = document.getElementById(activeId);
-  if (el) el.classList.add('active');
 }
 
 // ── Opportunity tabs ──
@@ -235,34 +207,4 @@ function initDismissibles() {
   }
 }
 
-/* ── Pinned / Recent / MPL partner toggle ── */
-function initPartnerViewToggle() {
-  const btns = document.querySelectorAll('.toggle-btn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const target = btn.dataset.view;
-      const viewMap = { pinned: 'pinnedPartnersView', recent: 'recentPartnersView', mpl: 'mplPartnersView' };
-      document.querySelectorAll('.partner-view').forEach(v => {
-        v.classList.toggle('hidden', v.id !== viewMap[target]);
-      });
-    });
-  });
-}
 
-/* ── Alert action buttons ── */
-/* ── Pin / Unpin partner cards ── */
-function initPinButtons() {
-  document.querySelectorAll('.pin-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      btn.classList.toggle('active');
-      const isPinned = btn.classList.contains('active');
-      btn.title = isPinned ? 'Unpin partner' : 'Pin partner';
-      btn.innerHTML = isPinned
-        ? '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.146.146A.5.5 0 0 1 4.5 0h7a.5.5 0 0 1 .5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 0 1-.5.5H8.5v5.5a.5.5 0 0 1-1 0V10H3.5a.5.5 0 0 1-.5-.5c0-.973.64-1.725 1.17-2.189A5.2 5.2 0 0 1 5 6.708V2.277a2.4 2.4 0 0 1-.354-.298C4.342 1.674 4 1.179 4 .5a.5.5 0 0 1 .146-.354z"/></svg>'
-        : '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.146.146A.5.5 0 0 1 4.5 0h7a.5.5 0 0 1 .5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 0 1-.5.5H8.5v5.5a.5.5 0 0 1-1 0V10H3.5a.5.5 0 0 1-.5-.5c0-.973.64-1.725 1.17-2.189A5.2 5.2 0 0 1 5 6.708V2.277a2.4 2.4 0 0 1-.354-.298C4.342 1.674 4 1.179 4 .5a.5.5 0 0 1 .146-.354z"/></svg>';
-    });
-  });
-}
