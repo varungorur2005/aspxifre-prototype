@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initPartnerLoad();
   initOppTabs();
   initBannerChange();
-  initDismissibles();
 });
 
 // ── Greeting ──
@@ -190,21 +189,6 @@ function renderOppView(opp) {
   ).join('');
 }
 
-/* ── Dismissible strips (Onboarding) ── */
-function initDismissibles() {
-  const onboardingStrip = document.getElementById('onboardingStrip');
 
-  if (localStorage.getItem('aspxi_onboarding_dismissed') === 'true' && onboardingStrip) {
-    onboardingStrip.classList.add('hidden');
-  }
-
-  const onboardingDismiss = document.getElementById('dismissOnboarding');
-  if (onboardingDismiss) {
-    onboardingDismiss.addEventListener('click', () => {
-      onboardingStrip.classList.add('hidden');
-      localStorage.setItem('aspxi_onboarding_dismissed', 'true');
-    });
-  }
-}
 
 
