@@ -199,6 +199,15 @@ body {
 }
 .hero-load-btn:hover { background: #106ebe; }
 
+/* ── Picker Helper Text ── */
+.picker-helper-text {
+  max-width: 640px; margin: 16px auto 0;
+  font-size: 13px; color: #616161; line-height: 1.6;
+  text-align: center;
+}
+.helper-link { color: #0078d4; text-decoration: none; font-weight: 500; }
+.helper-link:hover { text-decoration: underline; }
+
 /* ── Section heading ── */
 .section-heading {
   font-size: 18px; font-weight: 600; color: #242424;
